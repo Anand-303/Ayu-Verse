@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Ayuverse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #00b341;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: var(--primary-green);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.5rem;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .main-content {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .about-content {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .feature-list {
+            margin-top: 2rem;
+            padding-left: 20px;
+        }
+
+        .feature-list li {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .feature-list li::before {
+            content: "•";
+            color: var(--primary-green);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/Logo - AYUVER.png') }}" alt="Ayuverse Logo" class="logo-img">
+        </a>
+        <div class="nav-links">
+            <a href="/home">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/chat">Chat</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="about-section">
+            <h1 class="section-title">About Ayuverse</h1>
+            <div class="about-content">
+                <p>Ayuverse is a revolutionary platform that combines the ancient wisdom of Ayurveda with modern technology to provide personalized healthcare solutions. Our mission is to make Ayurvedic knowledge accessible and understandable to everyone, helping you achieve optimal health and wellness.</p>
+
+                <h2>Our Vision</h2>
+                <p>We envision a world where traditional medicine and modern science work hand in hand to create holistic healthcare solutions. Ayuverse aims to be the bridge between ancient wisdom and contemporary health needs.</p>
+
+                <h2>Key Features</h2>
+                <ul class="feature-list">
+                    <li>AI-powered Ayurvedic consultation</li>
+                    <li>Personalized herbal remedy recommendations</li>
+                    <li>Dosha analysis and balancing suggestions</li>
+                    <li>Comprehensive database of Ayurvedic herbs</li>
+                    <li>Interactive chat interface for health queries</li>
+                    <li>Secure user profiles and health history</li>
+                </ul>
+
+                <h2>Why Choose Ayuverse?</h2>
+                <p>At Ayuverse, we believe in the power of natural healing. Our platform is designed to help you:</p>
+                <ul class="feature-list">
+                    <li>Understand your body type (Dosha) better</li>
+                    <li>Get personalized health recommendations</li>
+                    <li>Learn about natural remedies for common ailments</li>
+                    <li>Track your health journey over time</li>
+                    <li>Access reliable Ayurvedic information</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

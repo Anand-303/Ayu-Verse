@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Consultation - Ayurveda Wellness{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <div class="text-center mb-5">
+                        <h1 class="display-4 text-ayurveda">Doctor Consultation</h1>
+                        <p class="lead">Book an appointment with our Ayurvedic practitioners</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h3 class="h4 mb-4">Schedule a Consultation</h3>
+                                    <p class="text-muted mb-4">Book a one-on-one session with our experienced Ayurvedic doctors for personalized health advice and treatment plans.</p>
+                                    <a href="#book-consultation" class="btn btn-ayurveda btn-lg w-100">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mt-4 mt-md-0">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h3 class="h4 mb-4">Emergency Contact</h3>
+                                    <p class="text-muted mb-4">For urgent medical assistance, please contact our emergency helpline.</p>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-phone-alt text-ayurveda me-3"></i>
+                                        <div>
+                                            <h6 class="mb-0">Emergency Helpline</h6>
+                                            <a href="tel:+911234567890" class="text-decoration-none">+91 12345 67890</a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-envelope text-ayurveda me-3"></i>
+                                        <div>
+                                            <h6 class="mb-0">Email</h6>
+                                            <a href="mailto:emergency@ayurvedawellness.com" class="text-decoration-none">emergency@ayurvedawellness.com</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5 pt-4" id="book-consultation">
+                        <h2 class="h3 mb-4">Book Your Consultation</h2>
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <form id="consultationForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fullName" class="form-label">Full Name</label>
+                                            <input type="text" class="form-control" id="fullName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" value="{{ session['email'] }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="phone" class="form-label">Phone Number</label>
+                                            <input type="tel" class="form-control" id="phone" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="consultationType" class="form-label">Consultation Type</label>
+                                            <select class="form-select" id="consultationType" required>
+                                                <option value="">Select consultation type</option>
+                                                <option value="general">General Consultation</option>
+                                                <option value="followup">Follow-up Consultation</option>
+                                                <option value="panchakarma">Panchakarma Consultation</option>
+                                                <option value="diet">Diet & Nutrition</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="preferredDate" class="form-label">Preferred Date & Time</label>
+                                        <input type="datetime-local" class="form-control" id="preferredDate" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="healthConcerns" class="form-label">Health Concerns</label>
+                                        <textarea class="form-control" id="healthConcerns" rows="4" placeholder="Please describe your health concerns" required></textarea>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-ayurveda btn-lg">Book Consultation</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5 pt-4">
+                        <h2 class="h3 mb-4">Our Ayurvedic Doctors</h2>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <img src="{{ url_for('static', filename='images/doctor1.jpg') }}" class="card-img-top" alt="Dr. Sharma">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Dr. Rajesh Sharma</h5>
+                                        <p class="text-muted">MD (Ayurveda), 15+ years experience</p>
+                                        <p class="card-text">Specializes in Panchakarma and Rheumatology</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <img src="{{ url_for('static', filename='images/doctor2.jpg') }}" class="card-img-top" alt="Dr. Patel">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Dr. Priya Patel</h5>
+                                        <p class="text-muted">BAMS, MS (Ayurveda), 10+ years experience</p>
+                                        <p class="card-text">Specializes in Women's Health and Fertility</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <img src="{{ url_for('static', filename='images/doctor3.jpg') }}" class="card-img-top" alt="Dr. Kumar">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Dr. Amit Kumar</h5>
+                                        <p class="text-muted">BAMS, MD (Ayurveda), 12+ years experience</p>
+                                        <p class="card-text">Specializes in Digestive Disorders and Detoxification</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Appointment Booked Successfully!</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h4>Thank You!</h4>
+                <p class="mb-0">Your consultation has been scheduled successfully. We've sent a confirmation to your email.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('home') }}" class="btn btn-ayurveda">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('consultationForm');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In a real application, you would send this data to your server
+            // For now, we'll just show a success message
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+            
+            // Reset form
+            form.reset();
+        });
+    });
+</script>
+{% endblock %}

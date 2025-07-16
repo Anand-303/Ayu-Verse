@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuverse - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --primary-color: #00b341;
+            --hover-color: #009935;
+            --vata-color: #7e57c2;
+            --pitta-color: #ef5350;
+            --kapha-color: #66bb6a;
+        }
+        
+        /* Dosha Progress Bar */
+        .dosha-progress {
+            height: 20px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+        
+        /* Dosha Alert */
+        .custom-dosha-alert {
+            background-color: #e3f2fd !important;
+            border-left: 5px solid #1976d2 !important;
+        }
+        
+        .dosha-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* Dosha Type Colors */
+        .text-vata { color: var(--vata-color); }
+        .text-pitta { color: var(--pitta-color); }
+        .text-kapha { color: var(--kapha-color); }
+        .bg-vata { background-color: var(--vata-color); }
+        .bg-pitta { background-color: var(--pitta-color); }
+        .bg-kapha { background-color: var(--kapha-color); }
+
+        body {
+            background-color: #f0f7f3;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary-color);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            padding: 20px 0;
+            color: white;
+        }
+
+        #content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 20px;
+            background-color: #f0f7f3;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-link:hover {
+            background-color: var(--hover-color);
+            color: white;
+        }
+
+        .sidebar-link i {
+            margin-right: 10px;
+        }
+
+        .main-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 179, 65, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
+        }
+
+        .feature-card i {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .bottom-links {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--hover-color));
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: white;
+        }
+
+        .welcome-section h2 {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .welcome-section p {
+            opacity: 0.9;
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="text-center mb-4">
+                <h3>Ayuverse</h3>
+            </div>
+            <div class="sidebar-links">
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-calendar3"></i> Diet Plan
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i> Yoga Poses
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-chat-dots"></i> Chat Bot
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-person-badge"></i> Doctor Consultation
+                </a>
+                <a href="{{ url_for('dosha_test') }}" class="sidebar-link">
+                    <i class="bi bi-clipboard-pulse"></i> Dosha Test
+                </a>
+            </div>
+            <div class="bottom-links">
+                <a href="/about" class="sidebar-link">
+                    <i class="bi bi-info-circle"></i> About Us
+                </a>
+                <a href="/support" class="sidebar-link">
+                    <i class="bi bi-question-circle"></i> Support
+                </a>
+                <a href="/logout" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Welcome, {{ username }}!</h2>
+                {% if dosha_info %}
+                <div class="alert alert-info mb-0 custom-dosha-alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-leaf me-2 dosha-icon"></i>
+                        <div>
+                            <h5 class="mb-0">Your Dosha Type: <strong class="text-{{ dosha_info.dosha_type|lower }}">{{ dosha_info.dosha_type }}</strong></h5>
+                            {% if dosha_info.confidence_scores %}
+                            <div class="mt-2">
+                                <div class="dosha-progress">
+                                    {% for dosha, score in dosha_info.confidence_scores.items() %}
+                                    <div class="progress-bar bg-{{ dosha|lower }}" role="progressbar" 
+                                         style="width: {{ score }}%" 
+                                         aria-valuenow="{{ score }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ dosha }} ({{ score }}%)
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <small class="text-muted d-block mt-1">Test taken on {{ dosha_info.test_date.strftime('%B %d, %Y') }}</small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <button id="startDoshaTest" class="btn btn-primary">
+                    <i class="fas fa-clipboard-check me-2"></i>Take Dosha Test
+                </button>
+                {% endif %}
+            </div>
+            <p>Explore natural remedies and healthcare solutions tailored just for you.</p>
+
+            <!-- Dosha Test Banner -->
+            <div class="dosha-banner mb-5 p-4 rounded-3" style="background: linear-gradient(135deg, #f5f9f0 0%, #e8f5e9 100%); border-left: 5px solid #00b341;">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="text-dark mb-2">Discover Your Ayurvedic Constitution</h3>
+                        <p class="text-muted mb-0">Take our 5-minute Dosha test to understand your body type and get personalized health recommendations.</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <button id="startDoshaTest2" class="btn btn-lg btn-success px-4">
+                            <i class="bi bi-clipboard2-pulse me-2"></i>Take Dosha Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Features -->
+            <h4 class="mb-4">Explore Our Features</h4>
+            <div class="main-buttons">
+                <div class="feature-card">
+                    <i class="bi bi-chat-dots"></i>
+                    <h4>Chat with AyuBot</h4>
+                    <p>Get personalized Ayurvedic advice and remedies for your health concerns.</p>
+                    <button onclick="openChatBot()" class="btn btn-outline-primary">Start Chat</button>
+                </div>
+                <div class="feature-card">
+                    <i class="bi bi-heart-pulse"></i>
+                    <h4>Doctor Consultation</h4>
+                    <p>Connect with certified Ayurvedic practitioners for professional advice.</p>
+                    <button onclick="connectDoctor()" class="btn btn-outline-primary">Book Now</button>
+                </div>
+                <div class="feature-card">
+                    <i class="bi bi-egg-fried"></i>
+                    <h4>Diet Plans</h4>
+                    <p>Discover personalized diet plans based on your dosha and health goals.</p>
+                    <a href="{{ url_for('diet_plans') }}" class="btn btn-outline-primary">View Plans</a>
+                </div>
+                <div class="feature-card">
+                    <i class="bi bi-brightness-high"></i>
+                    <h4>Yoga & Meditation</h4>
+                    <p>Learn yoga poses and meditation techniques for holistic wellness.</p>
+                    <a href="{{ url_for('yoga_poses') }}" class="btn btn-outline-primary">Explore Yoga</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Handle Dosha Test button click
+        function handleDoshaTest() {
+            const buttons = document.querySelectorAll('#startDoshaTest, #startDoshaTest2');
+            const originalText = buttons[0].innerHTML;
+            const loadingText = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Loading...';
+            
+            // Show loading state on all buttons
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.innerHTML = loadingText;
+            });
+            
+            // Initialize the dosha test
+            fetch('/init-dosha-test')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else {
+                        throw new Error(data.error || 'Failed to initialize test');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(error.message || 'Failed to start the dosha test. Please try again.');
+                    // Reset buttons
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    });
+                });
+        }
+        
+        // Add event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('#startDoshaTest, #startDoshaTest2').forEach(btn => {
+                btn.addEventListener('click', handleDoshaTest);
+            });
+        });
+        function openChatBot() {
+            // Add chatbot functionality
+            window.location.href = '/chat';
+        }
+
+        function connectDoctor() {
+            // Add doctor consultation functionality
+            window.location.href = '/doctor-consultation';
+        }
+
+        function viewDietPlans() {
+            // Add diet plans functionality
+            window.location.href = '/diet-plans';
+        }
+
+        function exploreYoga() {
+            // Add yoga poses functionality
+            window.location.href = '/yoga-poses';
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,10 @@
+This directory contains images for the website:
+
+Required images:
+- logo.png: The website logo
+- tea-meditation.jpg: Herbal tea meditation image showing hands and tea cup
+- sunset-meditation.jpg: Person in white doing meditation at sunset
+- herbal-ingredients.jpg: Traditional herbal ingredients and massage tools
+- ayurvedic-massage.jpg: Person receiving Ayurvedic massage treatment
+
+Please ensure all images are high quality and properly optimized for web use. 

@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-header bg-ayurveda text-white text-center">
+                    <h2 class="mb-0">Discover Your Dosha Type</h2>
+                    <p class="mb-0">Answer these questions to find out your dominant dosha</p>
+                    <div id="question-counter" class="mt-2 fw-bold">Question 1 of {{ questions|length }}</div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="progress mb-4">
+                        <div id="progress-bar" class="progress-bar bg-ayurveda" role="progressbar" style="width: 0%" 
+                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+
+                    <form id="doshaTestForm" action="{{ url_for('process_dosha_test') }}" method="POST">
+                        <div id="question-container">
+                            <!-- Questions will be loaded here by JavaScript -->
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" id="prevBtn" class="btn btn-outline-ayurveda d-none">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button type="button" id="nextBtn" class="btn btn-ayurveda ms-auto">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button type="submit" id="submitBtn" class="btn btn-success d-none">
+                                <i class="fas fa-check"></i> Get Results
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <div class="spinner-border text-ayurveda" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h4 class="mt-3">Analyzing your answers...</h4>
+                <p class="text-muted">This will just take a moment.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Global variables
+let currentQuestionIndex = 0;
+const questions = JSON.parse('{{ questions|tojson|safe }}');
+const answers = {};
+
+// Initialize the test when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the test
+    showQuestion();
+    updateNavigationButtons();
+    updateProgressBar();
+    
+    // Add event listeners
+    document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+    document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+    document.getElementById('doshaTestForm').addEventListener('submit', submitTest);
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft' && currentQuestionIndex > 0) {
+            prevQuestion();
+        } else if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
+            nextQuestion();
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentQuestionIndex < questions.length - 1) {
+                nextQuestion();
+            } else if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('submitBtn').click();
+            }
+        }
+    });
+});
+
+// Navigation functions
+function prevQuestion() {
+    saveAnswer();
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion();
+    }
+}
+
+function nextQuestion() {
+    // Check if an option is selected for the current question
+    const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+    
+    if (selectedOption) {
+        // Save the answer
+        answers[`q${currentQuestionIndex}`] = questions[currentQuestionIndex].options[parseInt(selectedOption.value)];
+        
+        // Move to next question if available
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            showQuestion();
+        } else {
+            // If it's the last question, show the submit button
+            document.getElementById('nextBtn').classList.add('d-none');
+            document.getElementById('submitBtn').classList.remove('d-none');
+        }
+    } else {
+        // Show error message if no option is selected
+        const errorAlert = `
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Please select an option before proceeding.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+            
+        // Remove any existing alerts
+        const existingAlert = document.querySelector('.alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+        
+        document.querySelector('.card-body').insertAdjacentHTML('afterbegin', errorAlert);
+        
+        // Scroll to top to show the alert
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Show current question
+function showQuestion() {
+    const questionContainer = document.getElementById('question-container');
+    const currentQuestion = questions[currentQuestionIndex];
+    
+    // Create question HTML
+    let questionHTML = `
+        <div class="question">
+            <h4 class="mb-4">${currentQuestion.question}</h4>
+            <div class="options">
+    `;
+    
+    // Add options
+    currentQuestion.options.forEach((option, index) => {
+        const isChecked = answers[`q${currentQuestionIndex}`] === option ? 'checked' : '';
+        questionHTML += `
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="radio" 
+                       name="q${currentQuestionIndex}" 
+                       id="q${currentQuestionIndex}_${index}" 
+                       value="${index}" ${isChecked}>
+                <label class="form-check-label" for="q${currentQuestionIndex}_${index}">
+                    ${option}
+                </label>
+            </div>
+        `;
+    });
+    
+    questionHTML += `
+            </div>
+        </div>
+    `;
+    
+    questionContainer.innerHTML = questionHTML;
+    
+    // Add event listeners to radio buttons to automatically save answer when selected
+    document.querySelectorAll(`input[name="q${currentQuestionIndex}"]`).forEach(radio => {
+        radio.addEventListener('change', function() {
+            answers[`q${currentQuestionIndex}`] = currentQuestion.options[parseInt(this.value)];
+            document.getElementById('nextBtn').disabled = false; // Enable next button when an option is selected
+        });
+    });
+    
+    updateNavigationButtons();
+    updateProgressBar();
+    const firstOption = document.querySelector(`input[name="q${currentQuestionIndex}"]`);
+    if (firstOption) firstOption.focus();
+}
+
+// Update navigation buttons
+function updateNavigationButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Show/hide previous button
+    if (currentQuestionIndex === 0) {
+        prevBtn.classList.add('d-none');
+    } else {
+        prevBtn.classList.remove('d-none');
+    }
+    
+    // Check if current question is answered
+    const isAnswered = answers[`q${currentQuestionIndex}`] !== undefined;
+    
+    // Update next button state
+    nextBtn.disabled = !isAnswered;
+    
+    // Show/hide next and submit buttons based on current question
+    if (currentQuestionIndex === questions.length - 1) {
+        nextBtn.classList.add('d-none');
+        submitBtn.classList.remove('d-none');
+    } else {
+        nextBtn.classList.remove('d-none');
+        submitBtn.classList.add('d-none');
+    }
+    
+    // Update progress bar
+    updateProgressBar();
+}
+
+// Update progress bar
+function updateProgressBar() {
+    const progressBar = document.getElementById('progress-bar');
+    const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    progressBar.setAttribute('aria-valuenow', progress);
+    progressBar.textContent = `${Math.round(progress)}%`;
+    
+    // Update question counter
+    document.getElementById('question-counter').textContent = 
+        `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+}
+
+// Save answer
+function saveAnswer() {
+    const question = questions[currentQuestionIndex];
+    const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+    if (selectedOption) {
+        // Store the actual text answer instead of just the index
+        answers[question.id] = question.options[parseInt(selectedOption.value)];
+        return true;
+    }
+    return false;
+}
+
+// Submit test results
+function submitTest(e) {
+    e.preventDefault();
+    
+    // Save the last answer
+    if (!saveAnswer()) {
+        alert('Please select an answer before submitting.');
+        return;
+    }
+    
+    // Check if all questions are answered
+    const unansweredQuestions = [];
+    for (let i = 0; i < questions.length; i++) {
+        if (answers[`q${i}`] === undefined) {
+            unansweredQuestions.push(i + 1);
+        }
+    }
+    
+    if (unansweredQuestions.length > 0) {
+        alert(`Please answer questions: ${unansweredQuestions.join(', ')}`);
+        // Go to the first unanswered question
+        currentQuestionIndex = unansweredQuestions[0] - 1;
+        showQuestion();
+        updateNavigationButtons();
+        updateProgressBar();
+        return;
+    }
+    
+    // Show loading modal
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    loadingModal.show();
+    
+    // Get CSRF token from meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    // Prepare data for submission
+    const submissionData = {
+        answers: answers
+    };
+    
+    console.log('Submitting answers:', submissionData);
+    
+    // Send data to server
+    fetch('{{ url_for("process_dosha_test") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrfToken  // Use the token from meta tag
+        },
+        body: JSON.stringify(submissionData),
+        credentials: 'same-origin'  // Include cookies for session
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadingModal.hide();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        // Redirect to results page on success
+        if (data.redirect) {
+            window.location.href = data.redirect;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        loadingModal.hide();
+        
+        // Show error message
+        const errorAlert = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${error.message || 'An error occurred while processing your test. Please try again.'}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+            
+        // Remove any existing alerts
+        const existingAlert = document.querySelector('.alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+        
+        document.querySelector('.card-body').insertAdjacentHTML('afterbegin', errorAlert);
+    });
+}
+</script>
+{% endblock %}
